@@ -14,7 +14,20 @@ datasource db {
 }
 
 model User {
- id Int @id @default(autoincrement())
+ id String @default(uuid()) @id
  email String @unique
- name String?
+ password String
+ name String
+ hashedRt String? //hashed refresh token
+ Board Board[]
+}
+
+model Board{
+  id String @default(uuid()) @id
+  userId String @map("user_id")
+  user User @relation(fields: [userId], references: [id])
+  title String
+  body String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
 }
