@@ -1,17 +1,22 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { BoardModule } from './board/board.module';
 import { LoggerMiddleware } from './common/logger.middleware';
-import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { AtGuard } from './common/guards/at.guard';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    BoardModule, UserModule],
+    AuthModule,
+    ],
   controllers: [],
-  providers: [],
+  providers: [{
+    provide: APP_GUARD,
+    useClass: AtGuard,
+  }],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {
